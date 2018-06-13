@@ -1795,7 +1795,7 @@ void Audio_Stream::createWatchdogTimer()
                                            0,
                                            watchdogTimerCallback,
                                            &ctx);
-    
+
     AS_TRACE("Starting the startup watchdog, period %i seconds\n", config->startupWatchdogPeriod);
     
     CFRunLoopAddTimer(CFRunLoopGetCurrent(), m_watchdogTimer, kCFRunLoopCommonModes);

@@ -40,6 +40,7 @@
 		96EDA4A61C6DEFA600B793E9 /* FSFrequencyPlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96EDA4A21C6DEFA600B793E9 /* FSFrequencyPlotView.m */; };
 		96EDA4A71C6DEFA600B793E9 /* FSPCMAudioSampleCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96EDA4A41C6DEFA600B793E9 /* FSPCMAudioSampleCapturer.m */; };
 		96EDA4A91C6DF05500B793E9 /* example-rss-feed.xml in Resources */ = {isa = PBXBuildFile; fileRef = 96EDA4A81C6DF05500B793E9 /* example-rss-feed.xml */; };
+		A4AB8D7920CFB9FF00239079 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = A4AB8D7820CFB9FF00239079 /* GCDAsyncSocket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +138,8 @@
 		96EDA4A41C6DEFA600B793E9 /* FSPCMAudioSampleCapturer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSPCMAudioSampleCapturer.m; path = ../Additions/FSPCMAudioSampleCapturer.m; sourceTree = "<group>"; };
 		96EDA4A81C6DF05500B793E9 /* example-rss-feed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "example-rss-feed.xml"; sourceTree = "<group>"; };
 		96F167AC1C6DE5AC00D33231 /* FreeStreamer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FreeStreamer.xcodeproj; path = ../FreeStreamer/FreeStreamer.xcodeproj; sourceTree = "<group>"; };
+		A4AB8D7720CFB9FF00239079 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		A4AB8D7820CFB9FF00239079 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +240,7 @@
 				60CF8BE718C5335200C657A8 /* FSPlaylistViewController.m */,
 				60B813E418C532F8001CC5A7 /* FSAppDelegate.h */,
 				60B813E518C532F8001CC5A7 /* FSAppDelegate.m */,
+				A4AB8D7520CFB9EF00239079 /* Socket */,
 				60B813E718C532F8001CC5A7 /* Images.xcassets */,
 				60B813DC18C532F8001CC5A7 /* Supporting Files */,
 				604A58181AC1C4FB008F3C95 /* FSLogger.h */,
@@ -297,6 +301,15 @@
 				96F167B11C6DE5AC00D33231 /* FreeStreamer.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A4AB8D7520CFB9EF00239079 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				A4AB8D7720CFB9FF00239079 /* GCDAsyncSocket.h */,
+				A4AB8D7820CFB9FF00239079 /* GCDAsyncSocket.m */,
+			);
+			name = Socket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -442,6 +455,7 @@
 				60B813E618C532F8001CC5A7 /* FSAppDelegate.m in Sources */,
 				60CF8BEA18C5335200C657A8 /* FSPlayerViewController.m in Sources */,
 				604A581A1AC1C4FB008F3C95 /* FSLogger.m in Sources */,
+				A4AB8D7920CFB9FF00239079 /* GCDAsyncSocket.m in Sources */,
 				96EDA4A61C6DEFA600B793E9 /* FSFrequencyPlotView.m in Sources */,
 				60929A3B18F9907500A5BDEE /* AJNotificationView.m in Sources */,
 				60CF8BEB18C5335200C657A8 /* FSPlaylistViewController.m in Sources */,

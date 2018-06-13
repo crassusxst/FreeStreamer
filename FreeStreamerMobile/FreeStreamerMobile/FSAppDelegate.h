@@ -7,12 +7,20 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "GCDAsyncSocket.h"
 
 /**
  * The application delegate of the iOS example application.
  */
-@interface FSAppDelegate : UIResponder <UIApplicationDelegate> {
+@interface FSAppDelegate : UIResponder <UIApplicationDelegate, GCDAsyncSocketDelegate> {
+    GCDAsyncSocket *asyncSocket;
 }
+
+/** 缓存数据 */
+@property (nonatomic, strong)  NSMutableData *bufferData;
+
+// 心跳时间
+@property (nonatomic, strong) NSTimer        *heartTimer;   // 心跳计时器
 
 /**
  * Reference to a window.

@@ -8,14 +8,37 @@
 
 #import "FSAppDelegate.h"
 
+#define HOST @"172.16.13.107"
+#define PORT 8999
+
+typedef enum : NSUInteger {
+    SocketOfflineByUser,
+    SocketOfflineByWifiCut,  // wifi断开
+    SocketOfflineByServer,   // 服务器掉线
+} SocketOfflineType;
+
 @implementation FSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self.window setRootViewController:self.navigationController];
     [self.window makeKeyAndVisible];
-    
+
+    [self socketConnectHost];
     return YES;
+}
+
+// 建立socket连接
+-(void)socketConnectHost{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+    asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:globalQueue];
+    NSError *error = nil;
+    NSString *host = HOST;
+    uint16_t port = PORT;
+    if (![asyncSocket connectToHost:host onPort:port error:&error])
+    {
+        NSLog(@"%@, 链接错误", error);
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -55,6 +78,81 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+}
+
+- (void)statrtTime
+{
+
+}
+
+// 心跳连接
+-(void)longConnectToSocket{
+    // 根据服务器要求发送固定格式的数据，假设为指令@"longConnect"，但是一般不会是这么简单的指令
+    NSString *longConnect = @"longConnect";
+    NSData   *dataStream  = [longConnect dataUsingEncoding:NSUTF8StringEncoding];
+    [asyncSocket writeData:dataStream withTimeout:1 tag:1];
+}
+
+- (void)cutOffSocket {
+    [asyncSocket disconnect];
+    asyncSocket.userData =  @(SocketOfflineByUser);
+    NSLog(@"断开连接");
+}
+
+#pragma mark Getter
+- (NSMutableData *)bufferData
+{
+    if (!_bufferData) {
+        _bufferData = NSMutableData.new;
+    }
+    return _bufferData;
+}
+
+#pragma mark Socket Delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// socket成功连接回调
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
+    [asyncSocket readDataWithTimeout:-1 tag:99];
+}
+
+- (void)socketDidSecure:(GCDAsyncSocket *)sock
+{
+    NSLog(@"socketDidSecure:%p", sock);
+//    self.viewController.label.text = @"Connected + Secure";
+
+    NSString *requestStr = [NSString stringWithFormat:@"GET / HTTP/1.1\r\nHost: %@\r\n\r\n", HOST];
+    NSData *requestData = [requestStr dataUsingEncoding:NSUTF8StringEncoding];
+
+    [sock writeData:requestData withTimeout:-1 tag:0];
+    [sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:0];
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
+{
+    NSLog(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+{
+    NSLog(@"socket:%p didReadData:withTag:%ld", sock, tag);
+
+    NSString *httpResponse = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    NSLog(@"HTTP Response:\n%@", httpResponse);
+
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
+{
+    NSLog(@"socketDidDisconnect:%p withError: %@", sock, err);
+    if (err.code == 57) {
+        asyncSocket.userData = @(SocketOfflineByWifiCut); // wifi断开
+    }
+    else {
+        asyncSocket.userData =  @(SocketOfflineByServer);  // 服务器掉线
+    }
 }
 
 - (void)resetBackground
